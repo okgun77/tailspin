@@ -68,6 +68,7 @@ describe('games data-access helpers', () => {
     });
 
     describe('filtering', () => {
+        /** Seeds two categories, two publishers and three games; returns their ids. */
         async function seedFilterData(): Promise<{ catA: number; catB: number; pubX: number; pubY: number }> {
             const [catA, catB] = await db
                 .insert(categories)
@@ -91,6 +92,7 @@ describe('games data-access helpers', () => {
             return { catA: catA.id, catB: catB.id, pubX: pubX.id, pubY: pubY.id };
         }
 
+        /** Extracts titles from a game list. */
         const titles = (list: { title: string }[]): string[] => list.map((g) => g.title);
 
         it('returns all games when no filters are given', async () => {

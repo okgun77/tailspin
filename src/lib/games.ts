@@ -68,6 +68,7 @@ export async function getGameById(db: Database, id: number): Promise<Game | null
     return row ? mapGame(row) : null;
 }
 
+/** Optional criteria accepted by {@link getGames}. */
 export interface GameFilters {
     /** Match games in any of these categories. */
     categoryIds?: number[];
@@ -75,7 +76,15 @@ export interface GameFilters {
     publisherId?: number;
 }
 
-/** Games matching the filters (categories OR'd, then AND'd with publisher), ordered by title. */
+/**
+ * Fetches games matching the given filters, ordered by title.
+ * Categories are OR'd together, then AND'd with the publisher.
+ * An empty or omitted filter matches everything.
+ *
+ * @param db - Database client to query.
+ * @param filters - Optional category and publisher criteria.
+ * @returns The matching games, possibly empty.
+ */
 export async function getGames(db: Database, filters: GameFilters = {}): Promise<Game[]> {
     const conditions: SQL[] = [];
     if (filters.categoryIds !== undefined && filters.categoryIds.length > 0) {
@@ -90,7 +99,12 @@ export async function getGames(db: Database, filters: GameFilters = {}): Promise
     return rows.map(mapGame);
 }
 
-/** All categories ordered by name. */
+/**
+ * Lists all categories ordered by name.
+ *
+ * @param db - Database client to query.
+ * @returns Every category, used to build filter options.
+ */
 export async function getAllCategories(db: Database): Promise<Category[]> {
     return db
         .select({ id: categories.id, name: categories.name })
@@ -98,7 +112,12 @@ export async function getAllCategories(db: Database): Promise<Category[]> {
         .orderBy(asc(categories.name));
 }
 
-/** All publishers ordered by name. */
+/**
+ * Lists all publishers ordered by name.
+ *
+ * @param db - Database client to query.
+ * @returns Every publisher, used to build filter options.
+ */
 export async function getAllPublishers(db: Database): Promise<Publisher[]> {
     return db
         .select({ id: publishers.id, name: publishers.name })
