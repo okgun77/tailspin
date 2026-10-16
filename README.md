@@ -42,6 +42,10 @@ npm run build      # prebuild migrates + seeds, then builds the static site
 npm run preview
 ```
 
+## Filtering games
+
+The home page lets you filter the game list by one or more categories (OR) and by publisher; the two filters combine (AND). Because the site is statically prerendered, filtering runs client-side and is reflected in the URL (e.g. `/?category=1,2&publisher=3`), so filtered views can be shared. The matching data helper is `getGames(db, { categoryIds, publisherId })` in `src/lib/games.ts`.
+
 ## Database
 
 The SQLite database is built from `db/games.csv` — there is no live data to migrate.
